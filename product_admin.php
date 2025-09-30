@@ -18,7 +18,7 @@ if(isset($_POST['add_product'])){
     $category = $_POST['CategoryID'];
     $supplier = $_POST['SupplierID'];
 
-    $stmt = $conn->prepare("INSERT INTO products (SKU, Name, Description, Price, StockQuantity, CategoryID, SupplierID) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO product (SKU, Name, Description, Price, StockQuantity, CategoryID, SupplierID) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("sssdiii", $sku, $name, $desc, $price, $stock, $category, $supplier);
 
     if($stmt->execute()){

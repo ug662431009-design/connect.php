@@ -17,7 +17,7 @@ if(isset($_POST['add_customer'])){
     $email = $_POST['Email'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO customers (FirstName, LastName, Phone, Address, Email, password) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO customer (FirstName, LastName, Phone, Address, Email, password) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssss", $fname, $lname, $phone, $address, $email, $password);
 
     if($stmt->execute()){
