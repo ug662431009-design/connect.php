@@ -59,7 +59,6 @@ input{border-radius:10px; border:1px solid #ffc0cb; padding:5px 10px; margin-bot
         <input type="text" name="Phone" placeholder="เบอร์โทร" class="form-control">
         <input type="text" name="Address" placeholder="ที่อยู่" class="form-control">
         <input type="email" name="Email" placeholder="อีเมล" class="form-control" required>
-        <input type="password" name="password" placeholder="รหัสผ่าน" class="form-control" required>
         <button type="submit" name="add_customer" class="btn btn-primary w-100">เพิ่มลูกค้า</button>
     </form>
 </div>
@@ -70,7 +69,7 @@ input{border-radius:10px; border:1px solid #ffc0cb; padding:5px 10px; margin-bot
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>CustomerID</th><th>FirstName</th><th>LastName</th><th>Phone</th><th>Address</th><th>Email</th>
+                <th>CustomerID</th><th>FirstName</th><th>LastName</th><th>Phone</th><th>Address</th><th>Email</th><th>Edit</th><th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -82,6 +81,17 @@ input{border-radius:10px; border:1px solid #ffc0cb; padding:5px 10px; margin-bot
                 <td><?= htmlspecialchars($row['Phone']) ?></td>
                 <td><?= htmlspecialchars($row['Address']) ?></td>
                 <td><?= htmlspecialchars($row['Email']) ?></td>
+                 <td>
+  <a href="edit_customer.php?id=<?= $row['CustomerID'] ?>" 
+     class="btn btn-warning btn-sm" 
+     style="margin-right: 20px;">แก้ไข</a>
+</td>
+<td>
+  <a href="delete_customer.php?id=<?= $row['CustomerID'] ?>" 
+     class="btn btn-danger btn-sm"
+     style="margin-left: 20px;"
+     onclick="return confirm('แน่ใจว่าจะลบสินค้านี้ไหม?');">ลบ</a>
+</td>
             </tr>
         <?php endwhile; ?>
         </tbody>

@@ -39,11 +39,10 @@ h1 { color: #ff6f91; text-shadow: 1px 1px #fff; margin-bottom: 40px; }
 <p>Hello Admin, <strong><?= $_SESSION['AdminName'] ?></strong> 👋 | <a href="logout.php">Logout</a></p>
 <a href="product_admin.php" class="btn btn-warning m-2">Manage Products 🛒</a>
 <a href="customer_admin.php" class="btn btn-info m-2">Manage Customers 👥</a>
+<a href="admin_pos.php" class="btn btn-info m-2">customer orders 🎒</a>
 <?php elseif(isset($_SESSION['CustomerID'])): ?>
 <p>Hello, <strong><?= $_SESSION['FirstName'] ?></strong> 👋 | <a href="logout.php">Logout</a></p>
 <?php else: ?>
-<a href="register.php" class="btn btn-primary m-2">Register</a>
-<a href="login.php" class="btn btn-success m-2">Login</a>
 <a href="admin_login.php" class="btn btn-warning m-2">Admin Login</a>
 <?php endif; ?>
 

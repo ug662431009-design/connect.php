@@ -18,11 +18,21 @@ if(isset($_POST['add_product'])){
     $category = $_POST['CategoryID'];
     $supplier = $_POST['SupplierID'];
 
-    $stmt = $conn->prepare("INSERT INTO product (SKU, Name, Description, Price, StockQuantity, CategoryID, SupplierID) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $sql = "INSERT INTO product (SKU, Name, Description, Price, StockQuantity, CategoryID, SupplierID)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+                Name = VALUES(Name),
+                Description = VALUES(Description),
+                Price = VALUES(Price),
+                StockQuantity = StockQuantity + VALUES(StockQuantity),
+                CategoryID = VALUES(CategoryID),
+                SupplierID = VALUES(SupplierID)";
+                
+    $stmt = $conn->prepare($sql);
     $stmt->bind_param("sssdiii", $sku, $name, $desc, $price, $stock, $category, $supplier);
 
     if($stmt->execute()){
-        $msg = "✅ เพิ่มสินค้าเรียบร้อย!";
+        $msg = "✅ เพิ่มสินค้าสำเร็จ หรืออัปเดตสต็อกเรียบร้อยแล้ว!";
     } else {
         $msg = "❌ เกิดข้อผิดพลาด: " . $stmt->error;
     }
@@ -57,7 +67,7 @@ input, select{border-radius:10px; border:1px solid #ffc0cb; padding:5px 10px; ma
     <form method="post">
         <input type="text" name="SKU" placeholder="SKU" class="form-control" required>
         <input type="text" name="Name" placeholder="ชื่อสินค้า" class="form-control" required>
-        <textarea name="Description" placeholder="รายละเอียด" class="form-control" required></textarea>
+        <input name="Description" placeholder="รายละเอียด" class="form-control" required>
         <input type="number" step="0.01" name="Price" placeholder="ราคา" class="form-control" required>
         <input type="number" name="StockQuantity" placeholder="จำนวนสต็อก" class="form-control" required>
         <input type="number" name="CategoryID" placeholder="CategoryID" class="form-control" required>
@@ -70,26 +80,52 @@ input, select{border-radius:10px; border:1px solid #ffc0cb; padding:5px 10px; ma
 <div class="card">
     <h4>รายการสินค้า</h4>
     <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ProductID</th><th>SKU</th><th>Name</th><th>Description</th><th>Price</th><th>Stock</th><th>CategoryID</th><th>SupplierID</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php while($row=$result->fetch_assoc()): ?>
-            <tr>
-                <td><?= $row['ProductID'] ?></td>
-                <td><?= htmlspecialchars($row['SKU']) ?></td>
-                <td><?= htmlspecialchars($row['Name']) ?></td>
-                <td><?= htmlspecialchars($row['Description']) ?></td>
-                <td><?= number_format($row['Price'],2) ?></td>
-                <td><?= $row['StockQuantity'] ?></td>
-                <td><?= $row['CategoryID'] ?></td>
-                <td><?= $row['SupplierID'] ?></td>
-            </tr>
-        <?php endwhile; ?>
-        </tbody>
-    </table>
+  <thead>
+    <tr>
+      <th>ProductID</th>
+      <th>SKU</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Stock</th>
+      <th>CategoryID</th>
+      <th>SupplierID</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+  <?php while($row = $result->fetch_assoc()): ?>
+    <tr>
+      <td><?= $row['ProductID'] ?></td>
+      <td><?= htmlspecialchars($row['SKU']) ?></td>
+      <td><?= htmlspecialchars($row['Name']) ?></td>
+      <td><?= htmlspecialchars($row['Description']) ?></td>
+      <td><?= number_format($row['Price'],2) ?></td>
+      <td><?= $row['StockQuantity'] ?></td>
+      <td><?= $row['CategoryID'] ?></td>
+      <td><?= $row['SupplierID'] ?></td>
+
+      <!-- ปุ่มแก้ไข -->
+      <td>
+  <a href="edit_product.php?id=<?= $row['ProductID'] ?>" 
+     class="btn btn-warning btn-sm" 
+     style="margin-right: 20px;">แก้ไข</a>
+</td>
+<td>
+  <a href="delete_product.php?id=<?= $row['ProductID'] ?>" 
+     class="btn btn-danger btn-sm"
+     style="margin-left: 20px;"
+     onclick="return confirm('แน่ใจว่าจะลบสินค้านี้ไหม?');">ลบ</a>
+</td>
+
+    </tr>
+  <?php endwhile; ?>
+  </tbody>
+</table>
+
+
+    
 </div>
 </div>
 <div class="bottom-buttons">
